@@ -1,108 +1,154 @@
 body {
-  margin: 0;
-  font-family: system-ui;
-  background: #1e1e1e;
-  color: #ccc;
+  margin:0;
+  font-family:system-ui;
+  background:#1e1e1e;
+  color:#ccc;
 }
 
-.screen {
-  padding: 20px;
+.hidden { display:none; }
+
+/* HOME */
+.home-header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
 }
 
-.hidden {
-  display: none;
+.logo {
+  font-size:28px;
+  color:#7aa2ff;
 }
 
-.header {
-  font-size: 20px;
-  margin-bottom: 20px;
+.title {
+  font-size:20px;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 200px);
-  gap: 15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,200px);
+  gap:15px;
 }
 
 .card {
-  background: #2a2a2a;
-  padding: 20px;
-  cursor: pointer;
-  border-radius: 8px;
+  background:#2a2a2a;
+  padding:20px;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.card:hover {
-  background: #333;
-}
+.card:hover { background:#333; }
 
 .main-btn {
-  margin-top: 20px;
-  padding: 10px;
-  background: #094771;
-  border: none;
-  color: white;
-  cursor: pointer;
+  margin-top:20px;
+  padding:10px;
+  background:#094771;
+  border:none;
+  color:white;
 }
 
-/* Workspace */
+/* PROJECT */
+
+.header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.bars-container {
+  overflow-x:auto;
+}
+
+.bars {
+  display:flex;
+  gap:10px;
+  padding:10px 0;
+}
+
+.bar {
+  display:flex;
+  min-width:150px;
+  height:12px;
+}
+
+.seg {
+  flex:1;
+  margin-right:2px;
+}
+
+.gray { background:#333; }
+.white { background:#aaa; }
+.red { background:#ff5f5f; }
+
+/* WORKSPACE */
+
 .app {
-  display: flex;
-  height: 100vh;
+  display:flex;
+  height:100vh;
 }
 
 .sidebar {
-  width: 50px;
-  background: #181818;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar button {
-  background: none;
-  border: none;
-  color: #ccc;
-  padding: 10px;
-  cursor: pointer;
+  width:50px;
+  background:#181818;
+  display:flex;
+  flex-direction:column;
 }
 
 .main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  flex:1;
+  display:flex;
+  flex-direction:column;
 }
 
 .topbar {
-  height: 35px;
-  background: #2b2b2b;
-  padding: 5px;
+  height:35px;
+  background:#2b2b2b;
+  padding:5px;
 }
 
 .workspace-body {
-  display: flex;
-  flex: 1;
+  display:flex;
+  flex:1;
 }
 
+/* Explorer */
 .explorer {
-  width: 200px;
-  background: #252526;
-  padding: 10px;
+  width:220px;
+  background:#252526;
+  padding:10px;
+  overflow-y:auto;
 }
 
 .scene {
-  padding: 5px;
-  cursor: pointer;
+  padding:5px;
+  cursor:pointer;
 }
 
 .scene.active {
-  background: #094771;
+  background:#094771;
 }
 
-.editor {
-  flex: 1;
+/* Editor */
+.editor-container {
+  flex:1;
+  position:relative;
+  overflow:hidden;
 }
 
 #editor {
-  padding: 20px;
-  height: 100%;
-  outline: none;
+  padding:20px;
+  height:100%;
+  overflow:auto;
+  outline:none;
+  white-space:pre-wrap;
+}
+
+/* Toolbar */
+.toolbar {
+  position:absolute;
+  background:#2b2b2b;
+  border:1px solid #444;
+  padding:5px;
+  border-radius:6px;
 }
