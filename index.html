@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>ScriptFlow</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>ScriptFlow</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -21,52 +21,34 @@
 
 <!-- PROJECT -->
 <div id="projectScreen" class="screen hidden">
-
-  <div class="header">
-    <button onclick="goHome()">←</button>
-    <span id="projectTitle"></span>
-  </div>
+  <button onclick="goHome()">← Back</button>
+  <h2 id="projectTitle"></h2>
 
   <div class="bars-container">
     <div id="workspaceBars" class="bars"></div>
   </div>
 
   <button class="main-btn" onclick="createWorkspace()">+ Workspace</button>
-
 </div>
 
 <!-- WORKSPACE -->
 <div id="workspaceScreen" class="hidden">
-
   <div class="app">
 
-    <div class="sidebar">
-      <button onclick="goProject()">←</button>
-      <button onclick="addScene()">📄</button>
-    </div>
+    <div class="explorer" id="scenes"></div>
 
     <div class="main">
-
-      <div class="topbar" id="workspaceTitle"></div>
-
-      <div class="workspace-body">
-
-        <div id="scenes" class="explorer"></div>
-
-        <div class="editor-container">
-          <div id="editor" contenteditable="true"></div>
-
-          <div id="toolbar" class="toolbar hidden">
-            <button onclick="wrapEntity()">Entity</button>
-          </div>
-        </div>
-
+      <div class="topbar">
+        <button onclick="goProject()">←</button>
+        <span id="workspaceTitle"></span>
       </div>
 
+      <div class="editor-container">
+        <div id="editor" contenteditable="true"></div>
+      </div>
     </div>
 
   </div>
-
 </div>
 
 <script src="app.js"></script>
