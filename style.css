@@ -7,15 +7,14 @@ body {
 
 .hidden { display:none; }
 
-/* HOME */
-
 .screen {
-  padding:30px 40px; 
+  padding:30px 40px;
 }
+
+/* HOME */
 
 .home-header {
   display:flex;
-  align-items:center;
   gap:15px;
   margin-bottom:40px;
 }
@@ -47,9 +46,7 @@ body {
   cursor:pointer;
 }
 
-.card:hover {
-  background:#333;
-}
+.card:hover { background:#333; }
 
 .main-btn {
   margin-top:30px;
@@ -66,19 +63,18 @@ body {
   display:flex;
   justify-content:center;
   width:100%;
+  margin-top:40px;
 }
 
 .bars {
   display:flex;
   gap:30px;
   overflow-x:auto;
-  padding-bottom:10px;
 
-  max-width:1200px;   
-  width:fit-content;  
+  max-width:1200px;
+  width:fit-content;
 }
 
-/* полоски */
 .bar {
   min-width:400px;
   height:60px;
@@ -86,12 +82,9 @@ body {
   border-radius:10px;
   overflow:hidden;
   background:#333;
-  cursor:pointer;
 }
 
-.seg {
-  flex:1;
-}
+.seg { flex:1; }
 
 .gray { background:#444; }
 .white { background:#ddd; }
@@ -104,11 +97,27 @@ body {
   height:100vh;
 }
 
-.sidebar {
-  width:50px;
-  background:#181818;
-  display:flex;
-  flex-direction:column;
+.explorer {
+  width:260px;
+  background:#252526;
+  padding:10px;
+  overflow:auto;
+}
+
+.item {
+  padding:6px;
+  cursor:pointer;
+  border-radius:4px;
+}
+
+.item:hover { background:#333; }
+
+.folder {
+  font-weight:bold;
+}
+
+.children {
+  margin-left:15px;
 }
 
 .main {
@@ -123,40 +132,15 @@ body {
   padding:10px;
 }
 
-/* Explorer */
-.explorer {
-  width:260px;
-  background:#252526;
-  padding:10px;
-  overflow:auto;
-}
-
-.item {
-  padding:6px;
-  cursor:pointer;
-  border-radius:4px;
-}
-
-.item:hover {
-  background:#333;
-}
-
-.folder {
-  font-weight:bold;
-}
-
-.children {
-  margin-left:15px;
-}
-
-/* Editor */
 .editor-container {
   flex:1;
+  display:flex;
+  overflow:hidden;
 }
 
 #editor {
+  flex:1;
   padding:25px;
-  height:100%;
   overflow:auto;
   outline:none;
   white-space:pre-wrap;
