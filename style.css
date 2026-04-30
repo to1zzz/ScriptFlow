@@ -64,8 +64,8 @@ body {
 
 .bars-container {
   display:flex;
-  justify-content:center; 
-  margin-top:40px;
+  justify-content:center;
+  width:100%;
 }
 
 .bars {
@@ -73,6 +73,9 @@ body {
   gap:30px;
   overflow-x:auto;
   padding-bottom:10px;
+
+  max-width:1200px;   
+  width:fit-content;  
 }
 
 /* полоски */
