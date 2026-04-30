@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>ScriptFlow</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>ScriptFlow</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- HOME -->
 <div id="home" class="screen">
-  <div class="header">ScriptFlow</div>
+  <div class="home-header">
+    <div class="logo">SF</div>
+    <div class="title">ScriptFlow</div>
+  </div>
 
   <div id="projects" class="grid"></div>
 
@@ -18,14 +21,18 @@
 
 <!-- PROJECT -->
 <div id="projectScreen" class="screen hidden">
+
   <div class="header">
     <button onclick="goHome()">←</button>
     <span id="projectTitle"></span>
   </div>
 
-  <div id="workspaces" class="grid"></div>
+  <div class="bars-container">
+    <div id="workspaceBars" class="bars"></div>
+  </div>
 
-  <button class="main-btn" onclick="createWorkspace()">+ New Workspace</button>
+  <button class="main-btn" onclick="createWorkspace()">+ Workspace</button>
+
 </div>
 
 <!-- WORKSPACE -->
@@ -33,23 +40,25 @@
 
   <div class="app">
 
-    <!-- Sidebar -->
     <div class="sidebar">
       <button onclick="goProject()">←</button>
       <button onclick="addScene()">📄</button>
     </div>
 
-    <!-- Main -->
     <div class="main">
 
       <div class="topbar" id="workspaceTitle"></div>
 
       <div class="workspace-body">
 
-        <div class="explorer" id="scenes"></div>
+        <div id="scenes" class="explorer"></div>
 
-        <div class="editor">
+        <div class="editor-container">
           <div id="editor" contenteditable="true"></div>
+
+          <div id="toolbar" class="toolbar hidden">
+            <button onclick="wrapEntity()">Entity</button>
+          </div>
         </div>
 
       </div>
