@@ -1,289 +1,224 @@
-// =======================
-// STATE
-// =======================
-
 let projects = [];
 
 let currentProject = null;
 let currentWorkspace = null;
 let currentScene = null;
 
+/* NAV */
 
-// =======================
-// NAVIGATION
-// =======================
-
-function show(id) {
+function show(id){
   document.querySelectorAll("#home,#projectScreen,#workspaceScreen")
-    .forEach(e => e.classList.add("hidden"));
-
+    .forEach(e=>e.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-function goHome() {
-  show("home");
-  renderProjects();
-}
+function goHome(){ show("home"); renderProjects(); }
+function goProject(){ show("projectScreen"); renderBars(); }
 
-function goProject() {
-  show("projectScreen");
-  renderBars();
-}
+/* PROJECTS */
 
+function createProject(){
+  let name = prompt("Project name:") || `Project ${projects.length+1}`;
 
-// =======================
-// PROJECTS
-// =======================
-
-function createProject() {
-  let name = prompt("Project name (optional):") || `Project ${projects.length + 1}`;
-
-  let project = {
+  projects.push({
     name,
-    workspaces: [],
-    last: null
-  };
+    workspaces:[]
+  });
 
-  projects.push(project);
   renderProjects();
 }
 
-function renderProjects() {
-  let el = document.getElementById("projects");
-  el.innerHTML = "";
+function renderProjects(){
+  let el=document.getElementById("projects");
+  el.innerHTML="";
 
-  projects.forEach(p => {
-    let card = document.createElement("div");
-    card.className = "card";
-    card.innerText = p.name;
+  projects.forEach(p=>{
+    let card=document.createElement("div");
+    card.className="card";
+    card.innerText=p.name;
 
-    // открыть проект
-    card.onclick = () => {
-      currentProject = p;
-      document.getElementById("projectTitle").innerText = p.name;
+    card.onclick=()=>{
+      currentProject=p;
+      document.getElementById("projectTitle").innerText=p.name;
       show("projectScreen");
       renderBars();
-    };
-
-    // rename
-    card.ondblclick = () => {
-      let n = prompt("Rename project:", p.name);
-      if (n) {
-        p.name = n;
-        renderProjects();
-      }
     };
 
     el.appendChild(card);
   });
 }
 
+/* WORKSPACES */
 
-// =======================
-// WORKSPACES
-// =======================
+function createWorkspace(){
+  let name = prompt("Workspace name:") || `Workspace ${currentProject.workspaces.length+1}`;
 
-function createWorkspace() {
-  let name = prompt("Workspace name (optional):") || `Workspace ${currentProject.workspaces.length + 1}`;
-
-  let workspace = {
+  currentProject.workspaces.push({
     name,
-    scenes: [],
-    last: null
-  };
+    root:[] // 🔥 теперь дерево
+  });
 
-  currentProject.workspaces.push(workspace);
   renderBars();
 }
 
-function renderBars() {
-  let el = document.getElementById("workspaceBars");
-  el.innerHTML = "";
+function renderBars(){
+  let el=document.getElementById("workspaceBars");
+  el.innerHTML="";
 
-  currentProject.workspaces.forEach(w => {
+  currentProject.workspaces.forEach(w=>{
+    let bar=document.createElement("div");
+    bar.className="bar";
 
-    let bar = document.createElement("div");
-    bar.className = "bar";
+    let items = flatten(w.root);
 
-    // 🔥 ФИКС: всегда минимум 1 сегмент
-    let scenes = w.scenes.length ? w.scenes : [{}];
+    if(items.length===0) items=[{}];
 
-    scenes.forEach(s => {
-      let seg = document.createElement("div");
+    items.forEach(s=>{
+      let seg=document.createElement("div");
 
-      if (!s.content) seg.className = "seg gray";
-      else seg.className = "seg white";
+      if(!s.content) seg.className="seg gray";
+      else seg.className="seg white";
 
-      if (w.last === s) seg.className = "seg red";
+      if(w.last===s) seg.className="seg red";
 
       bar.appendChild(seg);
     });
 
-    // открыть workspace
-    bar.onclick = () => {
-      currentWorkspace = w;
-      document.getElementById("workspaceTitle").innerText = w.name;
+    bar.onclick=()=>{
+      currentWorkspace=w;
+      document.getElementById("workspaceTitle").innerText=w.name;
       show("workspaceScreen");
-      renderScenes();
-      renderEditor();
-    };
-
-    // rename
-    bar.ondblclick = () => {
-      let n = prompt("Rename workspace:", w.name);
-      if (n) {
-        w.name = n;
-        renderBars();
-      }
+      renderTree();
     };
 
     el.appendChild(bar);
   });
 }
 
+/* TREE */
 
-// =======================
-// SCENES
-// =======================
-
-function addScene() {
-  let scene = {
-    title: `Scene ${currentWorkspace.scenes.length + 1}`,
-    content: ""
-  };
-
-  currentWorkspace.scenes.push(scene);
-  currentScene = scene;
-
-  renderScenes();
-  renderEditor();
+function addScene(){
+  currentWorkspace.root.push({
+    type:"scene",
+    title:`Scene ${Date.now()}`,
+    content:""
+  });
+  renderTree();
 }
 
-function renderScenes() {
-  let el = document.getElementById("scenes");
-  el.innerHTML = "";
+function addFolder(){
+  let name = prompt("Folder name:") || "Folder";
 
-  currentWorkspace.scenes.forEach(s => {
-    let div = document.createElement("div");
-    div.className = "scene";
-    div.innerText = s.title;
+  currentWorkspace.root.push({
+    type:"folder",
+    title:name,
+    open:true,
+    children:[]
+  });
 
-    if (s === currentScene) {
-      div.classList.add("active");
-    }
+  renderTree();
+}
 
-    div.onclick = () => {
-      currentScene = s;
-      currentWorkspace.last = s;
-      renderScenes();
-      renderEditor();
-    };
+function flatten(arr){
+  let res=[];
+  arr.forEach(i=>{
+    if(i.type==="scene") res.push(i);
+    if(i.type==="folder") res.push(...flatten(i.children));
+  });
+  return res;
+}
 
-    // rename сцены
-    div.ondblclick = () => {
-      let n = prompt("Rename scene:", s.title);
-      if (n) {
-        s.title = n;
-        renderScenes();
+function renderTree(){
+  let el=document.getElementById("scenes");
+  el.innerHTML="";
+
+  function draw(items, parent){
+    items.forEach(item=>{
+      let div=document.createElement("div");
+      div.className="item";
+
+      if(item.type==="folder"){
+        div.classList.add("folder");
+        div.innerText=(item.open?"📂 ":"📁 ")+item.title;
+
+        div.onclick=()=>{
+          item.open=!item.open;
+          renderTree();
+        };
+
+        parent.appendChild(div);
+
+        if(item.open){
+          let child=document.createElement("div");
+          child.className="children";
+          parent.appendChild(child);
+          draw(item.children, child);
+        }
+
+      } else {
+        div.innerText=item.title;
+
+        div.draggable=true;
+
+        div.onclick=()=>{
+          currentScene=item;
+          renderEditor();
+        };
+
+        div.ondragstart=(e)=>{
+          e.dataTransfer.setData("scene", JSON.stringify(item));
+        };
+
+        parent.appendChild(div);
       }
-    };
 
-    el.appendChild(div);
-  });
+      // drop в папку
+      div.ondragover=e=>e.preventDefault();
+
+      div.ondrop=e=>{
+        let data=JSON.parse(e.dataTransfer.getData("scene"));
+        if(item.type==="folder"){
+          item.children.push(data);
+          removeScene(currentWorkspace.root, data);
+          renderTree();
+        }
+      };
+
+    });
+  }
+
+  draw(currentWorkspace.root, el);
 }
 
+function removeScene(arr, target){
+  for(let i=0;i<arr.length;i++){
+    if(arr[i]===target){
+      arr.splice(i,1);
+      return true;
+    }
+    if(arr[i].children){
+      if(removeScene(arr[i].children,target)) return true;
+    }
+  }
+}
 
-// =======================
-// EDITOR
-// =======================
+/* EDITOR */
 
-function renderEditor() {
-  let editor = document.getElementById("editor");
+function renderEditor(){
+  let editor=document.getElementById("editor");
 
-  if (!currentScene) {
-    editor.innerText = "Create a scene";
+  if(!currentScene){
+    editor.innerText="Select scene";
     return;
   }
 
-  editor.innerHTML = currentScene.content;
+  editor.innerHTML=currentScene.content;
 
-  editor.oninput = () => {
-    currentScene.content = editor.innerHTML;
+  editor.oninput=()=>{
+    currentScene.content=editor.innerHTML;
   };
 }
 
-
-// =======================
-// TOOLBAR (ENTITY)
-// =======================
-
-let editor = document.getElementById("editor");
-let toolbar = document.getElementById("toolbar");
-
-editor.addEventListener("mouseup", () => {
-  let sel = window.getSelection();
-
-  if (!sel || sel.toString().length === 0) {
-    toolbar.classList.add("hidden");
-    return;
-  }
-
-  let range = sel.getRangeAt(0);
-  let rect = range.getBoundingClientRect();
-
-  toolbar.style.top = (rect.top - 40 + window.scrollY) + "px";
-  toolbar.style.left = (rect.left + window.scrollX) + "px";
-
-  toolbar.classList.remove("hidden");
-});
-
-function wrapEntity() {
-  let sel = window.getSelection();
-
-  if (!sel.rangeCount) return;
-
-  let range = sel.getRangeAt(0);
-
-  let span = document.createElement("span");
-  span.style.background = "#264f78";
-  span.style.padding = "2px 4px";
-  span.style.borderRadius = "4px";
-
-  try {
-    range.surroundContents(span);
-  } catch {
-    // если сложный selection — fallback
-    let text = range.toString();
-    span.innerText = text;
-    range.deleteContents();
-    range.insertNode(span);
-  }
-
-  toolbar.classList.add("hidden");
-}
-
-
-// =======================
-// RIGHT CLICK (FAKE FOLDER)
-// =======================
-
-document.getElementById("scenes").addEventListener("contextmenu", (e) => {
-  e.preventDefault();
-
-  let name = prompt("Folder name:");
-  if (!name) return;
-
-  currentWorkspace.scenes.push({
-    title: "📁 " + name,
-    content: ""
-  });
-
-  renderScenes();
-});
-
-
-// =======================
-// INIT
-// =======================
+/* INIT */
 
 renderProjects();
