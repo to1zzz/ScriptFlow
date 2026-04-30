@@ -20,11 +20,7 @@ function goProject(){ show("projectScreen"); renderBars(); }
 function createProject(){
   let name = prompt("Project name:") || `Project ${projects.length+1}`;
 
-  projects.push({
-    name,
-    workspaces:[]
-  });
-
+  projects.push({ name, workspaces:[] });
   renderProjects();
 }
 
@@ -32,7 +28,7 @@ function renderProjects(){
   let el=document.getElementById("projects");
   el.innerHTML="";
 
-  projects.forEach(p=>{
+  projects.forEach((p,i)=>{
     let card=document.createElement("div");
     card.className="card";
     card.innerText=p.name;
@@ -42,6 +38,14 @@ function renderProjects(){
       document.getElementById("projectTitle").innerText=p.name;
       show("projectScreen");
       renderBars();
+    };
+
+    card.oncontextmenu=(e)=>{
+      e.preventDefault();
+      if(confirm("Delete project?")){
+        projects.splice(i,1);
+        renderProjects();
+      }
     };
 
     el.appendChild(card);
@@ -55,7 +59,7 @@ function createWorkspace(){
 
   currentProject.workspaces.push({
     name,
-    root:[] // 🔥 теперь дерево
+    root:[]
   });
 
   renderBars();
@@ -69,17 +73,14 @@ function renderBars(){
     let bar=document.createElement("div");
     bar.className="bar";
 
-    let items = flatten(w.root);
+    let scenes = flatten(w.root);
+    if(scenes.length===0) scenes=[{}];
 
-    if(items.length===0) items=[{}];
-
-    items.forEach(s=>{
+    scenes.forEach(s=>{
       let seg=document.createElement("div");
 
       if(!s.content) seg.className="seg gray";
       else seg.className="seg white";
-
-      if(w.last===s) seg.className="seg red";
 
       bar.appendChild(seg);
     });
@@ -107,15 +108,12 @@ function addScene(){
 }
 
 function addFolder(){
-  let name = prompt("Folder name:") || "Folder";
-
   currentWorkspace.root.push({
     type:"folder",
-    title:name,
+    title:"Folder",
     open:true,
     children:[]
   });
-
   renderTree();
 }
 
@@ -132,7 +130,7 @@ function renderTree(){
   let el=document.getElementById("scenes");
   el.innerHTML="";
 
-  function draw(items, parent){
+  function draw(items,parent){
     items.forEach(item=>{
       let div=document.createElement("div");
       div.className="item";
@@ -158,48 +156,17 @@ function renderTree(){
       } else {
         div.innerText=item.title;
 
-        div.draggable=true;
-
         div.onclick=()=>{
           currentScene=item;
           renderEditor();
         };
 
-        div.ondragstart=(e)=>{
-          e.dataTransfer.setData("scene", JSON.stringify(item));
-        };
-
         parent.appendChild(div);
       }
-
-      // drop в папку
-      div.ondragover=e=>e.preventDefault();
-
-      div.ondrop=e=>{
-        let data=JSON.parse(e.dataTransfer.getData("scene"));
-        if(item.type==="folder"){
-          item.children.push(data);
-          removeScene(currentWorkspace.root, data);
-          renderTree();
-        }
-      };
-
     });
   }
 
   draw(currentWorkspace.root, el);
-}
-
-function removeScene(arr, target){
-  for(let i=0;i<arr.length;i++){
-    if(arr[i]===target){
-      arr.splice(i,1);
-      return true;
-    }
-    if(arr[i].children){
-      if(removeScene(arr[i].children,target)) return true;
-    }
-  }
 }
 
 /* EDITOR */
