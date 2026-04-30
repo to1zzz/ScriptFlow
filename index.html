@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ScriptFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="home" class="screen">
+  <h1>ScriptFlow</h1>
+  <div id="projects"></div>
+  <button onclick="createProject()">+ Новый проект</button>
+</div>
+
+<div id="editorScreen" class="screen hidden">
+  <div class="layout">
+    
+    <div class="left">
+      <div id="editor" contenteditable="true"></div>
+
+      <div class="toolbar">
+        <button onclick="addScene()">+ сцена</button>
+        <button onclick="addFolder()">+ папка</button>
+        <button onclick="addEntity()">+ сущность</button>
+        <button onclick="goHome()">← назад</button>
+      </div>
+    </div>
+
+    <div class="right">
+      <div id="scenes"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
