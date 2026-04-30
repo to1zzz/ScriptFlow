@@ -1,96 +1,108 @@
-import React, { useState } from "react";
-import "./App.css";
+const app = document.getElementById("app");
 
-export default function App() {
-  const [projects, setProjects] = useState([
-    { id: 1, name: "Project 1", workspaces: [] }
-  ]);
+let projects = [
+  { id: 1, name: "Project 1", workspaces: [] }
+];
 
-  const [currentProject, setCurrentProject] = useState(null);
+let currentProject = null;
 
-  // --- PROJECTS ---
-  const createProject = () => {
-    const name = prompt("Project name") || `Project ${projects.length + 1}`;
-    setProjects([...projects, { id: Date.now(), name, workspaces: [] }]);
-  };
+// ---------- RENDER ----------
 
-  const deleteProject = (id) => {
-    if (window.confirm("Delete project?")) {
-      setProjects(projects.filter(p => p.id !== id));
-    }
-  };
-
-  // --- WORKSPACES ---
-  const createWorkspace = () => {
-    const name =
-      prompt("Workspace name") ||
-      `Workspace ${currentProject.workspaces.length + 1}`;
-
-    const updated = {
-      ...currentProject,
-      workspaces: [
-        ...currentProject.workspaces,
-        { id: Date.now(), name }
-      ]
-    };
-
-    updateProject(updated);
-  };
-
-  const updateProject = (updated) => {
-    setProjects(projects.map(p => (p.id === updated.id ? updated : p)));
-    setCurrentProject(updated);
-  };
-
-  // --- HOME SCREEN ---
+function render() {
   if (!currentProject) {
-    return (
-      <div className="home">
-        <h1 className="logo">SF ScriptFlow</h1>
-
-        <div className="grid">
-          {projects.map((p) => (
-            <div
-              key={p.id}
-              className="card"
-              onClick={() => setCurrentProject(p)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                deleteProject(p.id);
-              }}
-            >
-              {p.name}
-            </div>
-          ))}
-        </div>
-
-        <button className="btn" onClick={createProject}>
-          + New Project
-        </button>
-      </div>
-    );
+    renderHome();
+  } else {
+    renderProject();
   }
+}
 
-  // --- PROJECT SCREEN ---
-  return (
-    <div className="project">
-      <button className="back" onClick={() => setCurrentProject(null)}>
-        ← Back
-      </button>
+// ---------- HOME ----------
 
-      <h2>{currentProject.name}</h2>
+function renderHome() {
+  app.innerHTML = `
+    <div class="page">
+      <h1 class="logo">SF ScriptFlow</h1>
 
-      <div className="grid">
-        {currentProject.workspaces.map((w) => (
-          <div key={w.id} className="card">
-            {w.name}
+      <div class="grid">
+        ${projects.map(p => `
+          <div class="card" 
+            onclick="openProject(${p.id})"
+            oncontextmenu="deleteProject(event, ${p.id})"
+          >
+            ${p.name}
           </div>
-        ))}
+        `).join("")}
       </div>
 
-      <button className="btn" onClick={createWorkspace}>
+      <button class="btn" onclick="createProject()">
+        + New Project
+      </button>
+    </div>
+  `;
+}
+
+// ---------- PROJECT ----------
+
+function renderProject() {
+  app.innerHTML = `
+    <div class="page">
+      <button class="back" onclick="goBack()">← Back</button>
+
+      <h2>${currentProject.name}</h2>
+
+      <div class="grid">
+        ${currentProject.workspaces.map(w => `
+          <div class="card">
+            ${w.name}
+          </div>
+        `).join("")}
+      </div>
+
+      <button class="btn" onclick="createWorkspace()">
         + Workspace
       </button>
     </div>
-  );
+  `;
 }
+
+// ---------- ACTIONS ----------
+
+function createProject() {
+  const name = prompt("Project name") || `Project ${projects.length + 1}`;
+  projects.push({ id: Date.now(), name, workspaces: [] });
+  render();
+}
+
+function deleteProject(e, id) {
+  e.preventDefault();
+  if (confirm("Delete project?")) {
+    projects = projects.filter(p => p.id !== id);
+    render();
+  }
+}
+
+function openProject(id) {
+  currentProject = projects.find(p => p.id === id);
+  render();
+}
+
+function goBack() {
+  currentProject = null;
+  render();
+}
+
+function createWorkspace() {
+  const name =
+    prompt("Workspace name") ||
+    `Workspace ${currentProject.workspaces.length + 1}`;
+
+  currentProject.workspaces.push({
+    id: Date.now(),
+    name
+  });
+
+  render();
+}
+
+// ---------- INIT ----------
+render();
