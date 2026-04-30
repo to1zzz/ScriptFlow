@@ -7,39 +7,44 @@ body {
 
 /* HEADER */
 .header {
-  padding: 10px 20px;
+  padding: 14px 24px;
   border-bottom: 1px solid #333;
+  font-size: 20px;
 }
 
-/* GRID (фикс проблемы "улетает вправо") */
+/* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px;
 }
 
-/* КАРТОЧКИ */
+/* КАРТОЧКИ (СТАЛИ БОЛЬШЕ) */
 .card {
-  background: #2a2a2a;
-  padding: 20px;
-  border-radius: 10px;
+  background: linear-gradient(145deg, #2a2a2a, #262626);
+  padding: 28px;
+  height: 120px;
+  border-radius: 14px;
   cursor: pointer;
   transition: 0.2s;
+  font-size: 18px;
+  display: flex;
+  align-items: flex-end;
 }
 
 .card:hover {
   background: #333;
 }
 
-/* КНОПКИ */
+/* КНОПКА */
 .btn {
-  margin: 20px;
-  padding: 10px 16px;
+  margin: 24px;
+  padding: 12px 18px;
   background: #007acc;
   border: none;
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
@@ -48,23 +53,23 @@ body {
   padding: 20px;
 }
 
-/* РЕДАКТОР */
+/* EDITOR */
 .editor {
   display: flex;
   height: calc(100vh - 120px);
 }
 
 .sidebar {
-  width: 220px;
+  width: 240px;
   background: #252526;
-  padding: 10px;
+  padding: 12px;
   overflow-y: auto;
 }
 
 .scene {
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .scene:hover {
@@ -75,6 +80,7 @@ body {
   background: #007acc;
 }
 
+/* TEXT */
 .editor-area {
   flex: 1;
   padding: 20px;
@@ -89,4 +95,29 @@ textarea {
   border: none;
   resize: none;
   font-size: 16px;
+}
+
+/* ---------- КОНТЕКСТНОЕ МЕНЮ ---------- */
+
+.context-menu {
+  position: absolute;
+  background: #2b2b2b;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 6px 0;
+  width: 160px;
+  z-index: 999;
+}
+
+.context-item {
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.context-item:hover {
+  background: #3a3a3a;
+}
+
+.context-delete {
+  color: #ff5c5c;
 }
